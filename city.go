@@ -7,6 +7,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 //go:embed data.csv
@@ -18,8 +19,20 @@ var citymr = map[int]City{}
 
 type City struct {
 	PrefCode int    `json:"prefCode"`
-	Name     string `json:"name"`
-	Code     int    `json:"code"`
+	CityCode int    `json:"cityCode"`
+	CityName string `json:"cityName"`
+	WardCode int    `json:"wardCode"`
+	WardName string `json:"wardName"`
+}
+
+func (c *City) Code() int {
+	if c == nil {
+		return 0
+	}
+	if c.WardCode > 0 {
+		return c.WardCode
+	}
+	return c.CityCode
 }
 
 func init() {
@@ -28,32 +41,72 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	var lastCityCode int
+	var lastCityName string
+
 	for _, record := range data {
 		if len(record) < 3 {
 			panic("invalid length")
 		}
+
 		pcode, err := strconv.Atoi(record[0])
 		if err != nil {
 			panic("invalid code")
 		}
+
 		code, err := strconv.Atoi(record[2])
 		if err != nil {
 			panic("invalid code")
 		}
+
+		var wardCode int
+		var wardName string
+		var cityCode int
+		var cityName string
+
+		if !isWard(record[1]) {
+			cityCode = code
+			cityName = record[1]
+			lastCityCode = cityCode
+			lastCityName = cityName
+		} else {
+			if isTokyo23ku(code) {
+				lastCityCode = 13100
+				lastCityName = "東京都特別区部"
+			} else {
+				cityCode = lastCityCode
+				cityName = lastCityName
+			}
+
+			wardCode = code
+			wardName = record[1]
+		}
+
 		city := City{
 			PrefCode: pcode,
-			Code:     code,
-			Name:     record[1],
+			CityCode: cityCode,
+			CityName: cityName,
+			WardCode: wardCode,
+			WardName: wardName,
 		}
+
 		Cities = append(Cities, city)
-		citym[record[0]+record[1]] = city
+		if isTokyo23ku(code) {
+			cityName = ""
+		}
+		citym[record[0]+cityName+wardName] = city
 		citymr[code] = city
 	}
 }
 
 // CityByName は、都道府県コードと市区町村名を基に市区町村情報を返します。
-func CityByName(prefCode int, name string) *City {
-	k := FormatPrefectureCode(prefCode) + name
+func CityByName(prefCode int, cityName, wardName string) *City {
+	if cityName == "東京都特別区部" {
+		cityName = ""
+	}
+
+	k := FormatPrefectureCode(prefCode) + cityName + wardName
 	c, ok := citym[k]
 	if !ok {
 		return nil
@@ -64,7 +117,7 @@ func CityByName(prefCode int, name string) *City {
 // CitiesByName は、市区町村名に合致する全ての市区町村情報を返します。
 func CitiesByName(name string) (res []City) {
 	for _, c := range Cities {
-		if c.Name == name {
+		if c.CityName == name || c.WardName == name {
 			res = append(res, c)
 		}
 	}
@@ -100,4 +153,12 @@ func ParseCityCode(code string) int {
 // ValidateCityCode は、市区町村コードが有効かどうかを返します。
 func ValidateCityCode(code int) bool {
 	return code >= PrefectureMinCode*100 && code <= (PrefectureMaxCode+1)*1000-1
+}
+
+func isWard(name string) bool {
+	return strings.HasSuffix(name, "区")
+}
+
+func isTokyo23ku(code int) bool {
+	return code >= 13101 && code < 13199
 }

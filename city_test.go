@@ -6,18 +6,18 @@ import (
 )
 
 func TestCityByName(t *testing.T) {
-	e := &City{PrefCode: 13, Name: "千代田区", Code: 13101}
-	if c := CityByName(13, "千代田区"); !reflect.DeepEqual(c, e) {
+	e := &City{PrefCode: 27, CityName: "堺市", CityCode: 27140, WardName: "北区", WardCode: 27146}
+	if c := CityByName(27, "堺市", "北区"); !reflect.DeepEqual(c, e) {
 		t.Errorf("expected: %#v, actual: %#v", e, c)
 	}
 	e = nil
-	if c := CityByName(12, "千代田区"); !reflect.DeepEqual(c, e) {
+	if c := CityByName(28, "堺市", "北区"); !reflect.DeepEqual(c, e) {
 		t.Errorf("expected: %#v, actual: %#v", e, c)
 	}
 }
 
 func TestCitiesByName(t *testing.T) {
-	e := []City{{PrefCode: 13, Name: "千代田区", Code: 13101}}
+	e := []City{{PrefCode: 13, WardName: "千代田区", WardCode: 13101}}
 	if c := CitiesByName("千代田区"); !reflect.DeepEqual(c, e) {
 		t.Errorf("expected: %#v, actual: %#v", e, c)
 	}
@@ -28,7 +28,7 @@ func TestCitiesByName(t *testing.T) {
 }
 
 func TestCityByCode(t *testing.T) {
-	e := &City{PrefCode: 13, Name: "千代田区", Code: 13101}
+	e := &City{PrefCode: 13, WardName: "千代田区", WardCode: 13101}
 	if c := CityByCode(13101); !reflect.DeepEqual(c, e) {
 		t.Errorf("expected: %#v, actual: %#v", e, c)
 	}
