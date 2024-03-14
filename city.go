@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/eukarya-inc/jpareacode/jpareacodepref"
 )
 
 //go:embed data.csv
@@ -131,6 +133,28 @@ func CityByCode(code int) *City {
 		return nil
 	}
 	return &c
+}
+
+// CityByCodeString は、市区町村コードの文字列を基に市区町村情報を返します。
+func CityByCodeString(code string) *City {
+	c, _ := strconv.Atoi(code)
+	return CityByCode(c)
+}
+
+// SearchCitiesByName は、都道府県名や市区町村名に部分一致する全ての市区町村情報を返します。
+func SearchCitiesByName(name string) (res []City) {
+	for _, c := range Cities {
+		prefName := jpareacodepref.PrefectureNameByCodeInt(c.PrefCode)
+		if strings.Contains(prefName, name) {
+			res = append(res, c)
+			continue
+		}
+
+		if strings.Contains(c.CityName, name) || strings.Contains(c.WardName, name) {
+			res = append(res, c)
+		}
+	}
+	return
 }
 
 // FormatCityCode は、intの市区町村名コードをstringに変換します。無効なコードの場合は空文字列が返されます。

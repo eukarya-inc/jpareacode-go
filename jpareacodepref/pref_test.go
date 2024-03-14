@@ -45,20 +45,20 @@ func TestPrefectureCodeStrings(t *testing.T) {
 }
 
 func TestPrefectureName(t *testing.T) {
-	if c := PrefectureName(1); c != "北海道" {
+	if c := PrefectureNameByCodeInt(1); c != "北海道" {
 		t.Errorf("expected: %s, actual: %s", "北海道", c)
 	}
-	if c := PrefectureName(0); c != "" {
+	if c := PrefectureNameByCodeInt(0); c != "" {
 		t.Errorf("expected: %s, actual: %s", "", c)
 	}
 }
 
 func TestPrefectureNames(t *testing.T) {
-	c := PrefectureNames(13, 1)
+	c := PrefectureNamesByCodeInt(13, 1)
 	if len(c) != 2 || c[0] != "東京都" || c[1] != "北海道" {
 		t.Errorf("expected: %s, actual: %s,%s", "東京都,北海道", c[0], c[1])
 	}
-	c = PrefectureNames(13, 0)
+	c = PrefectureNamesByCodeInt(13, 0)
 	if len(c) != 2 || c[0] != "東京都" || c[1] != "" {
 		t.Errorf("expected: %s, actual: %s,%s", "東京都,", c[0], c[1])
 	}
