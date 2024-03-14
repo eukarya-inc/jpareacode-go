@@ -18,7 +18,7 @@ func main() {
   jpareacode.PrefectureCodeStrings("北海道", "東京都") // ["01", "13"]
   jpareacode.PrefectureNameByCodeInt(1) // "北海道"
   jpareacode.PrefectureNamesByCodeInt(1, 13) // ["北海道", "東京都"]
-  jpareacode.SearchPrefectures // []Prefecture{{Name:"北海道", Code:1}, ...}
+  jpareacode.SearchPrefectures("北海") // []Prefecture{{Name:"北海道", Code:1}}
   jpareacode.Prefectures // []stirng{"北海道", ...}
 
   jpareacode.CityByName(13, "", "千代田区") // &City{PrefCode:13, CityName:"東京都特別区部", CityCode:13100, WardName:"千代田区", WardCode:13101}
