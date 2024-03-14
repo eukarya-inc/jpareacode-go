@@ -101,7 +101,7 @@ func PrefectureName(code int) string {
 	if !ValidatePrefectureCode(code) {
 		return ""
 	}
-	return Prefectures[code]
+	return Prefectures[code-1]
 }
 
 // PrefectureNames は、複数の都道府県コードを基に都道府県名を[]stringで返します。見つからない要素は空文字列になります。
