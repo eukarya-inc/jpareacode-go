@@ -28,8 +28,8 @@ var PrefectureNameByCodeString = jpareacodepref.PrefectureNameByCodeString
 // PrefectureNamesByCodeString は、複数の都道府県コードを基に都道府県名を[]stringで返します。見つからない要素は空文字列になります。
 var PrefectureNamesByCodeString = jpareacodepref.PrefectureNamesByCodeString
 
-// SearchPrefectureCodes は、名前が部分一致する全ての都道府県を返します。
-var SearchPrefectureCodes = jpareacodepref.SearchPrefectureCodes
+// SearchPrefectures は、名前が部分一致する全ての都道府県を返します。
+var SearchPrefectures = jpareacodepref.SearchPrefectures
 
 // FormatPrefectureCode は、intの都道府県コードをstringに変換します。
 var FormatPrefectureCode = jpareacodepref.FormatPrefectureCode

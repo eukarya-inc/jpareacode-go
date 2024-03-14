@@ -28,7 +28,7 @@ func main() {
 		}
 	} else {
 		found := false
-		prefCodes := jpareacodepref.SearchPrefectureCodes(param)
+		prefCodes := jpareacodepref.SearchPrefectures(param)
 		for _, p := range prefCodes {
 			found = true
 			printPref(p)

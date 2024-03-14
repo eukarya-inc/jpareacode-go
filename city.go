@@ -12,6 +12,8 @@ import (
 	"github.com/eukarya-inc/jpareacode/jpareacodepref"
 )
 
+const tokyo23ku = "東京都特別区部"
+
 //go:embed data.csv
 var data []byte
 
@@ -75,7 +77,7 @@ func init() {
 		} else {
 			if isTokyo23ku(code) {
 				lastCityCode = 13100
-				lastCityName = "東京都特別区部"
+				lastCityName = tokyo23ku
 			} else {
 				cityCode = lastCityCode
 				cityName = lastCityName
@@ -104,7 +106,7 @@ func init() {
 
 // CityByName は、都道府県コードと市区町村名を基に市区町村情報を返します。
 func CityByName(prefCode int, cityName, wardName string) *City {
-	if cityName == "東京都特別区部" {
+	if cityName == tokyo23ku {
 		cityName = ""
 	}
 

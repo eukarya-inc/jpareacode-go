@@ -136,8 +136,8 @@ func PrefectureNamesByCodeString(code ...string) (r []string) {
 	return
 }
 
-// SearchPrefectureCodes は、名前が部分一致する全ての都道府県を返します。
-func SearchPrefectureCodes(name string) (r []Prefecture) {
+// SearchPrefectures は、名前が部分一致する全ての都道府県を返します。
+func SearchPrefectures(name string) (r []Prefecture) {
 	for k, v := range Prefectures {
 		if strings.Contains(v, name) {
 			r = append(r, Prefecture{
