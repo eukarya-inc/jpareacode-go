@@ -13,7 +13,7 @@ import (
 )
 
 const tokyo23ku = "東京都特別区部"
-const tokyo23kuCode = 13101
+const tokyo23kuCode = 13100
 
 //go:embed data.csv
 var data []byte
