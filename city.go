@@ -13,6 +13,7 @@ import (
 )
 
 const tokyo23ku = "東京都特別区部"
+const tokyo23kuCode = 13101
 
 //go:embed data.csv
 var data []byte
@@ -76,12 +77,11 @@ func init() {
 			lastCityName = cityName
 		} else {
 			if isTokyo23ku(code) {
-				lastCityCode = 13100
+				lastCityCode = tokyo23kuCode
 				lastCityName = tokyo23ku
-			} else {
-				cityCode = lastCityCode
-				cityName = lastCityName
 			}
+			cityCode = lastCityCode
+			cityName = lastCityName
 
 			wardCode = code
 			wardName = record[1]
