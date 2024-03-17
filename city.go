@@ -50,6 +50,8 @@ func init() {
 	var lastCityCode int
 	var lastCityName string
 
+	data = append(data, []string{"13", tokyo23ku, FormatCityCode(tokyo23kuCode)})
+
 	for _, record := range data {
 		if len(record) < 3 {
 			panic("invalid length")
