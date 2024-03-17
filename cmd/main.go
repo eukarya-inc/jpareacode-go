@@ -9,35 +9,45 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
+	invalid := false
+	if len(os.Args) < 2 || os.Args[1] == "-h" || os.Args[1] == "--help" || len(os.Args[1]) == 0 {
+		invalid = true
+	}
+
+	if invalid {
 		os.Stderr.WriteString("Usage: jpareacode <area code or city name>\n\nFind city info by area code or city name.\n")
 		os.Exit(1)
 	}
 
-	param := os.Args[1]
-	if isNunmeric(param) {
-		city := jpareacode.CityByCodeString(param)
-		if city != nil {
-			printCity(city)
-		} else {
-			pref := jpareacodepref.PrefectureNameByCodeString(param)
-			printPref(jpareacodepref.Prefecture{
-				Name:       pref,
-				CodeString: param,
-			})
+	params := os.Args[1:]
+
+	if isNunmeric(params[0][:1]) {
+		for _, code := range params {
+			city := jpareacode.CityByCodeString(code)
+			if city != nil {
+				printCity(city, len(params) > 1)
+			} else {
+				pref := jpareacodepref.PrefectureNameByCodeString(code)
+				printPref(jpareacodepref.Prefecture{
+					Name:       pref,
+					CodeString: code,
+				}, len(params) > 1)
+			}
 		}
 	} else {
+		param := params[0]
+
 		found := false
 		prefCodes := jpareacodepref.SearchPrefectures(param)
 		for _, p := range prefCodes {
 			found = true
-			printPref(p)
+			printPref(p, false)
 		}
 
 		cities := jpareacode.SearchCitiesByName(param)
 		for _, c := range cities {
 			found = true
-			printCity(&c)
+			printCity(&c, false)
 		}
 
 		if !found {
@@ -47,18 +57,22 @@ func main() {
 	}
 }
 
-func printCity(c *jpareacode.City) {
+func printCity(c *jpareacode.City, ignoreErr bool) {
 	if c == nil {
-		os.Stderr.WriteString("City not found\n")
-		os.Exit(1)
+		if !ignoreErr {
+			os.Stderr.WriteString("City not found\n")
+			os.Exit(1)
+		}
 	}
 	os.Stdout.WriteString(cityToString(c) + "\n")
 }
 
-func printPref(p jpareacode.Prefecture) {
+func printPref(p jpareacode.Prefecture, ignoreErr bool) {
 	if p.Name == "" || p.CodeString == "" {
-		os.Stderr.WriteString("Prefecture not found\n")
-		os.Exit(1)
+		if !ignoreErr {
+			os.Stderr.WriteString("Prefecture not found\n")
+			os.Exit(1)
+		}
 	}
 	os.Stdout.WriteString(prefToString(p.Name, p.CodeString) + "\n")
 }
